@@ -80,20 +80,22 @@ int main() {
     int active_fds[NUM_CHILDREN] = {1, 1, 1, 1, 1};
 
     while (1) {
+        // *********** Enable below code only if you want to limit the runtime of the parent process *************
         // Check elapsed time
-        gettimeofday(&current_time, NULL);
-        double elapsed = (current_time.tv_sec - program_start.tv_sec) +
-                        (current_time.tv_usec - program_start.tv_usec) / 1000000.0;
+        //gettimeofday(&current_time, NULL);
+        // double elapsed = (current_time.tv_sec - program_start.tv_sec) +
+        //                 (current_time.tv_usec - program_start.tv_usec) / 1000000.0;
         
-        if (elapsed >= MAX_RUNTIME) {
-            printf("Program runtime exceeded %d seconds. Terminating all children.\n", (int)MAX_RUNTIME);
-            for (int i = 0; i < NUM_CHILDREN; i++) {
-                if (pids[i] > 0) {
-                    kill(pids[i], SIGTERM);
-                }
-            }
-            break;
-        }
+        // if (elapsed >= MAX_RUNTIME) {
+        //     printf("Program runtime exceeded %d seconds. Terminating all children.\n", (int)MAX_RUNTIME);
+        //     for (int i = 0; i < NUM_CHILDREN; i++) {
+        //         if (pids[i] > 0) {
+        //             kill(pids[i], SIGTERM);
+        //         }
+        //     }
+        //     break;
+        // }
+        //********************************************************************************************************
 
         FD_ZERO(&read_fds);
         max_fd = 0;

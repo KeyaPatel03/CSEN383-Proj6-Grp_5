@@ -23,10 +23,30 @@ void child_process(int child_id, int write_fd) {
 
         if (elapsed_time >= 30.0) break;
 
+
         if (child_id == 4) {
-            // Child 5: terminal interaction
-            printf("Child %d: Enter a message: ", child_id + 1);
-            fflush(stdout); // Ensure prompt appears immediately
+            double remaining = 30.0 - elapsed_time;
+            if (remaining <= 0) break;
+
+             // Child 5: terminal interaction
+             printf("Child %d: Enter a message: ", child_id + 1);
+             fflush(stdout); // Ensure prompt appears immediately
+    
+            fd_set readfds;
+            FD_ZERO(&readfds);
+            FD_SET(STDIN_FILENO, &readfds);
+    
+            struct timeval timeout;
+            timeout.tv_sec  = (int)remaining;
+            timeout.tv_usec = (int)((remaining - timeout.tv_sec) * 1e6);
+    
+            int sel = select(STDIN_FILENO + 1, &readfds, NULL, NULL, &timeout);
+            if (sel <= 0) {
+                // sel == 0 → timeout expired (30 s up)
+                // sel < 0 → error
+                break;
+            }
+           
             if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
                 break;
             }
